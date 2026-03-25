@@ -1,11 +1,6 @@
 ---
 name: memory
 description: 投资分析记忆管理skill。当用户提到"记录操作"、"查询历史"、"保存结论"、"查询结论"、"更新持仓"、"生成总结"、"查询危机知识"、"记录教训"、"提取规律"等操作时自动触发。支持自然语言触发，提供渐进式知识加载。
-license: MIT
-compatibility: opencode
-metadata:
-  audience: developers
-  workflow: investment-analysis
 ---
 
 # Memory Skill - 投资分析记忆管理
@@ -29,18 +24,7 @@ metadata:
 
 ## 快速开始
 
-### 1. 初始化知识库
-
-```bash
-# 复制示例数据
-cp -r skills/memory/assets/memory .memory
-
-# 或导入Markdown源文件
-uv run python skills/memory/scripts/import_crisis_knowledge.py \
-  --input "Global Crisis Events and Stock Market Impact Analysis.md"
-```
-
-### 2. 记录操作
+### 1. 记录操作
 
 ```bash
 uv run python skills/memory/scripts/record_operation.py \
@@ -49,7 +33,7 @@ uv run python skills/memory/scripts/record_operation.py \
   --result '{"price": 350.5, "change": 2.3}'
 ```
 
-### 3. 查询相关知识
+### 2. 查询相关知识
 
 ```bash
 # 查询危机知识
@@ -63,7 +47,7 @@ uv run python skills/memory/scripts/get_relevant_knowledge.py \
   --situation "分析黄金走势"
 ```
 
-### 4. 记录教训
+### 3. 记录教训
 
 ```bash
 uv run python skills/memory/scripts/record_lesson.py \
@@ -124,46 +108,6 @@ uv run python skills/memory/scripts/record_lesson.py \
 ├── operations.json         # 操作记录
 ├── conclusions.json        # 分析结论
 └── portfolio.json          # 持仓信息
-```
-
-## 集成方式
-
-### Python集成
-
-```python
-import sys
-import os
-sys.path.insert(0, "skills/memory/scripts")
-
-from record_operation import record_operation
-from get_relevant_knowledge import search_relevant_crises, search_relevant_lessons
-
-# 记录操作
-record_operation(
-    operation_type="quote",
-    details={"code": "HK.00700"},
-    result={"price": 350.5}
-)
-
-# 查询相关知识
-crises = search_relevant_crises("中东局势紧张", limit=3)
-lessons = search_relevant_lessons("黄金走势", limit=3)
-```
-
-### Agent集成
-
-在system prompt中添加：
-
-```markdown
-## 记忆管理
-
-分析市场形势时，必须先查询历史知识：
-1. 调用 get_relevant_knowledge.py --type all --situation "当前形势"
-2. 基于历史知识和教训生成分析
-
-发现判断错误时，必须记录教训：
-- 调用 record_lesson.py 记录
-- 包括：判断内容、实际结果、根本原因、教训总结、避免策略
 ```
 
 ## 最佳实践

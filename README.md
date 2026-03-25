@@ -32,7 +32,6 @@ investment-memory/
     │   │   ├── get_conclusion.py     # 查询结论
     │   │   ├── update_portfolio.py   # 更新投资组合
     │   │   ├── summarize.py          # 生成总结
-    │   │   ├── import_crisis_knowledge.py  # 导入危机知识
     │   │   ├── record_lesson.py      # 记录教训
     │   │   ├── get_relevant_knowledge.py   # 查询相关知识
     │   │   ├── extract_patterns.py   # 提取投资规律
@@ -49,7 +48,7 @@ investment-memory/
 
 ### 环境准备
 
-把以下内容发给你的智能体。
+将以下内容发送给你的智能体（openclaw、claude code、opencode等）。
 
 ```
 1. python环境配置
@@ -114,7 +113,3 @@ cp -r skills/memory/assets/memory .memory
 ### 问题反馈
 
 如果你发现任何问题或有改进建议，请在 [GitHub Issues](https://github.com/HarryReporter/investment-memory/issues) 中提出。
-
-## 许可证
-
-MIT License

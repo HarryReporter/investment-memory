@@ -1,11 +1,6 @@
 ---
 name: crisis-knowledge-maintainer
 description: 用于更新和维护危机事件知识库的skill。当用户提到"更新危机信息"、"补充危机事件"、"修改危机详情"、"更新投资规律"、"更新市场影响"、"更新投资机会"等操作时自动触发。支持自然语言触发，提供交互式确认。
-license: MIT
-compatibility: opencode
-metadata:
-  audience: developers
-  workflow: investment-analysis
 ---
 
 # Crisis Knowledge Maintainer - 危机知识维护
