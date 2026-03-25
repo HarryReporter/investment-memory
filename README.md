@@ -15,6 +15,17 @@
 - **投资规律提取**：从危机事件中提取投资规律
 - **智能知识检索**：根据当前形势加载相关历史知识
 
+### 产业趋势知识管理
+- **趋势生命周期分析**：判断产业所处阶段（萌芽期、成长期、成熟期、衰退期）
+- **趋势健康度评估**：评估趋势的投资价值和风险等级
+- **投资时机判断**：基于生命周期阶段给出投资时机建议
+- **趋势查询**：根据当前市场热点查询相关产业趋势
+
+### 投资决策框架
+- **估值检查**：检查资产估值是否合理（PE/PB历史分位数、PEG等）
+- **仓位计算**：根据风险等级和凯利公式计算建议仓位
+- **风险评估**：评估投资机会的综合风险（市场、公司、流动性、政策、技术）
+
 ## 项目结构
 
 ```
@@ -38,7 +49,15 @@ investment-memory/
     │   │   └── manage_links.py       # 管理关联关系
     │   ├── assets/                   # 示例数据
     │   └── evals/                    # 评估用例
-    └── crisis-knowledge-maintainer/  # 危机知识维护skill
+    ├── crisis-knowledge-maintainer/  # 危机知识维护skill
+    │   ├── SKILL.md
+    │   ├── scripts/
+    │   └── evals/
+    ├── trend-knowledge/              # 产业趋势知识管理skill
+    │   ├── SKILL.md
+    │   ├── scripts/
+    │   └── evals/
+    └── investment-framework/         # 投资决策框架skill
         ├── SKILL.md
         ├── scripts/
         └── evals/
@@ -62,28 +81,32 @@ Ps: uv是一个高效的python环境管理工具。
 cp -r skills/memory/assets/memory .memory
 ```
 
-## 集成方式
+## Agent Prompt
 
-### Agent集成
-
-在agent的相关配置文件中添加：
+将以下prompt添加到你的智能体配置中（支持openclaw、claude code、opencode等）：
 
 ```markdown
-## 记忆管理
+## 投资分析工作流程
 
+在进行投资分析时，必须遵循以下工作流程：
+
+### 1. 知识检索阶段
 在分析市场形势时，必须先查询相关历史知识：
+- 读取危机知识索引（.memory/crisis_knowledge/index.json）
+- 读取教训索引（.memory/lessons_learned/index.json）
+- 读取产业趋势索引（.memory/industry_trends/index.json）
+- 判断哪些历史知识与当前形势最相关
+- 加载相关知识详情
 
-1. 读取索引文件（.memory/crisis_knowledge/index.json）
-2. 判断哪些历史危机与当前形势最相关
-3. 加载相关危机详情
-4. 读取教训索引（.memory/lessons_learned/index.json）
-5. 判断哪些教训最相关
-6. 加载相关教训详情
-7. 基于历史知识和教训生成分析
+### 2. 分析阶段
+- 基于历史知识和教训生成分析
+- 使用投资决策框架进行估值检查
+- 进行风险评估和仓位计算
 
-发现判断错误时，必须记录教训：
-- 调用 record_lesson.py 记录
-- 包括：判断内容、实际结果、根本原因、教训总结、避免策略
+### 3. 记录阶段
+- 记录本次分析操作
+- 保存分析结论
+- 发现判断错误时，必须记录教训
 ```
 
 ## 数据存储
@@ -98,6 +121,9 @@ cp -r skills/memory/assets/memory .memory
 ├── lessons_learned/         # 学习教训
 │   ├── index.json          # 索引
 │   └── lessons/            # 详情文件
+├── industry_trends/         # 产业趋势
+│   ├── index.json          # 索引
+│   └── trends/             # 详情文件
 ├── investment_patterns.json # 投资规律
 ├── links.json              # 关联关系
 ├── operations.json         # 操作记录
@@ -107,8 +133,10 @@ cp -r skills/memory/assets/memory .memory
 
 ## 相关Skill
 
-- **memory**: 记忆管理skill，记录和查询投资分析操作历史
+- **memory**: 记忆管理skill，记录和查询投资分析操作历史、危机知识、产业趋势和学习教训
 - **crisis-knowledge-maintainer**: 危机知识维护skill，更新和维护危机事件知识库
+- **trend-knowledge**: 产业趋势知识管理skill，分析行业趋势生命周期和投资时机
+- **investment-framework**: 投资决策框架skill，提供估值检查、仓位计算和风险评估工具
 
 ### 问题反馈
 
