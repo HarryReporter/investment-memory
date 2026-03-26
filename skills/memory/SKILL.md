@@ -1,75 +1,87 @@
 ---
 name: memory
-description: 投资分析记忆管理skill。当用户提到"记录操作"、"查询历史"、"保存结论"、"查询结论"、"更新持仓"、"生成总结"、"查询危机知识"、"记录教训"、"提取规律"等操作时自动触发。支持自然语言触发，提供渐进式知识加载。
+description: 投资分析记忆管理。当用户提到"查询危机知识"、"查询趋势"、"查询教训"、"记录操作"、"保存结论"、"更新持仓"、"生成总结"、"投资历史"、"投资记忆"时自动触发。这是投资知识查询的主要入口，优先使用Obsidian CLI读取vault/目录下的markdown文件。
 ---
 
 # Memory Skill - 投资分析记忆管理
 
-管理投资分析的操作历史、结论、危机知识、产业趋势和学习教训，支持智能知识检索。
+管理投资分析的危机知识、产业趋势、投资教训和投资框架，支持智能知识检索。
 
-## 核心功能
+## 数据存储
 
-| 功能 | 说明 | 脚本 |
-|------|------|------|
-| 记录操作 | 记录每次API调用和分析操作 | `record_operation.py` |
-| 查询历史 | 按时间、类型、股票代码查询 | `get_history.py` |
-| 保存结论 | 保存分析结论和投资建议 | `save_conclusion.py` |
-| 查询结论 | 查询保存的分析结论 | `get_conclusion.py` |
-| 更新投资组合 | 管理持仓信息 | `update_portfolio.py` |
-| 生成总结 | 按时间段生成操作总结 | `summarize.py` |
-| 查询相关知识 | 智能检索危机知识、教训和产业趋势 | `get_relevant_knowledge.py` |
-| 记录教训 | 记录错误判断和教训 | `record_lesson.py` |
-| 提取规律 | 从危机事件提取投资规律 | `extract_patterns.py` |
-| 管理关联 | 管理事件、教训间的关联 | `manage_links.py` |
+所有数据存储在 `vault/` Obsidian知识库：
 
-## 快速开始
-
-### 1. 记录操作
-
-```bash
-uv run python skills/memory/scripts/record_operation.py \
-  --type "quote" \
-  --details '{"code": "HK.00700", "action": "get_snapshot"}' \
-  --result '{"price": 350.5, "change": 2.3}'
+```
+vault/
+├── 危机事件/              # 危机知识 (14个事件)
+├── 产业趋势/              # 产业趋势 (6个趋势)
+├── 投资教训/              # 学习教训
+├── 投资框架/              # 投资决策工具
+├── _index.md              # 主索引
+├── crisis-events.base     # 危机事件过滤视图
+├── industry-trends.base   # 趋势过滤视图
+└── investment-lessons.base # 教训过滤视图
 ```
 
-### 2. 查询相关知识（含产业趋势）
+## 核心工作流
+
+### 1. 查询危机知识
 
 ```bash
-# 查询危机知识
-uv run python skills/memory/scripts/get_relevant_knowledge.py \
-  --type crisis \
-  --situation "当前中东局势紧张"
+# 读取特定危机事件
+obsidian read file="危机事件/CRISIS_2026_USIRAN"
 
-# 查询相关教训
-uv run python skills/memory/scripts/get_relevant_knowledge.py \
-  --type lessons \
-  --situation "分析黄金走势"
+# 快速获取元数据（不读取正文，省tokens）
+obsidian property:get file="危机事件/CRISIS_2026_USIRAN"
 
-# 查询产业趋势
-uv run python skills/memory/scripts/get_relevant_knowledge.py \
-  --type trends \
-  --situation "AI概念很火"
+# 按严重程度筛选
+obsidian search query="severity:critical tag:#危机事件"
 
-# 查询所有相关知识
-uv run python skills/memory/scripts/get_relevant_knowledge.py \
-  --type all \
-  --situation "当前AI板块投资机会"
+# 使用Bases视图查看所有危机
+obsidian read file="crisis-events.base"
 ```
 
-### 3. 记录教训
+### 2. 查询产业趋势
 
 ```bash
-uv run python skills/memory/scripts/record_lesson.py \
-  --related-crisis "CRISIS_2026_USIRAN" \
-  --asset "黄金" \
-  --judgment "上涨" \
-  --confidence 0.8 \
-  --actual-result "-10%" \
-  --root-cause "前期涨幅过大" \
-  --lesson "判断黄金需检查过去12月涨幅" \
-  --avoidance-strategy "涨幅>50%时谨慎看多" \
-  --keywords "黄金,滞胀,误判"
+# 读取特定趋势
+obsidian read file="产业趋势/TREND_2023_AI"
+
+# 按生命周期阶段筛选
+obsidian search query="current_phase:growth tag:#产业趋势"
+
+# 使用Bases视图
+obsidian read file="industry-trends.base"
+```
+
+### 3. 查询投资教训
+
+```bash
+# 读取特定教训
+obsidian read file="投资教训/LESSON_20260325_5774c4b6"
+
+# 按资产筛选
+obsidian search query="asset:黄金 tag:#投资教训"
+```
+
+### 4. 查询投资框架
+
+```bash
+# 读取估值检查方法
+obsidian read file="投资框架/估值检查"
+
+# 读取仓位管理方法
+obsidian read file="投资框架/仓位管理"
+```
+
+### 5. 搜索所有相关知识
+
+```bash
+# 全局搜索关键词
+obsidian search query="原油" limit=10
+
+# 查看反向链接（找到关联知识）
+obsidian backlinks file="CRISIS_2026_USIRAN"
 ```
 
 ## 使用场景
@@ -78,73 +90,47 @@ uv run python skills/memory/scripts/record_lesson.py \
 
 ```
 用户：分析一下当前中东局势对A股的影响
-智能体：1. 调用 get_relevant_knowledge.py 查询相关危机知识
-        2. 调用 get_relevant_knowledge.py 查询相关教训
-        3. 调用 get_relevant_knowledge.py 查询相关产业趋势
+智能体：1. obsidian search query="中东 tag:#危机事件"
+        2. obsidian read file="危机事件/CRISIS_2026_USIRAN"
+        3. obsidian search query="原油 tag:#投资教训"
         4. 基于历史知识生成分析
-        5. 调用 record_operation.py 记录本次分析操作
 ```
 
 ### 场景2：分析行业趋势投资机会
 
 ```
 用户：AI板块现在能投资吗？
-智能体：1. 调用 get_relevant_knowledge.py --type trends 查询AI趋势
-        2. 调用 get_relevant_knowledge.py --type lessons 查询相关教训
+智能体：1. obsidian read file="产业趋势/TREND_2023_AI"
+        2. obsidian property:get file="产业趋势/TREND_2023_AI"
         3. 分析趋势生命周期阶段
         4. 给出投资建议
 ```
 
-### 场景3：发现判断错误时记录教训
+### 场景3：查询相关教训避免重复错误
 
 ```
-用户：黄金判断错了，实际下跌了10%
-智能体：1. 调用 record_lesson.py 记录教训
-        2. 更新教训索引
-        3. 建立与相关危机的关联
+用户：黄金现在能买吗？
+智能体：1. obsidian search query="黄金 tag:#投资教训"
+        2. 读取相关教训
+        3. 结合教训给出建议
 ```
 
-### 场景4：生成操作总结
+## Token优化策略
 
-```
-用户：生成本周的操作总结
-智能体：1. 调用 summarize.py --period week
-        2. 展示操作统计、结论统计、持仓情况
-```
+1. **先读properties**：使用 `obsidian property:get` 只获取元数据
+2. **使用Bases视图**：一次读取获取全局概览
+3. **可折叠callouts**：详情在 `> [!details]-` 中，按需展开
+4. **按需加载**：先读摘要，需要时再读详情
 
-## 数据存储
+## Obsidian格式说明
 
-所有数据存储在 `.memory/` 目录：
-
-```
-.memory/
-├── crisis_knowledge/        # 危机知识
-│   ├── index.json          # 索引（元数据+摘要）
-│   └── events/             # 详情文件
-├── lessons_learned/         # 学习教训
-│   ├── index.json          # 索引
-│   └── lessons/            # 详情文件
-├── industry_trends/         # 产业趋势
-│   ├── index.json          # 索引
-│   └── trends/             # 详情文件
-├── investment_patterns.json # 投资规律
-├── links.json              # 关联关系
-├── operations.json         # 操作记录
-├── conclusions.json        # 分析结论
-└── portfolio.json          # 持仓信息
-```
-
-## 最佳实践
-
-1. **及时记录**：每次API调用后立即记录操作
-2. **详细描述**：在details中提供足够的上下文
-3. **定期总结**：使用summarize.py生成定期报告
-4. **分析前查询**：始终先查询相关知识，再生成分析
-5. **发现错误**：及时记录教训，丰富学习库
-6. **关注趋势**：分析投资机会时，同时考虑产业趋势生命周期
+- **Frontmatter**：存储结构化元数据（event_id, severity, date等）
+- **Tags**：分类标签（#危机事件 #军事冲突 #原油）
+- **Wikilinks**：关联链接（`[[CRISIS_2026_USIRAN]]`）
+- **Callouts**：可折叠详情（`> [!details]- 内容`）
 
 ## 相关Skill
 
-- **trend-knowledge**: 产业趋势知识管理skill，分析行业周期和投资时机
-- **investment-framework**: 投资决策框架skill，提供估值、仓位和风险评估
-- **crisis-knowledge-maintainer**: 危机知识维护skill，更新和维护危机事件知识库
+- **crisis-knowledge-maintainer**: 更新和维护危机事件
+- **trend-knowledge**: 管理产业趋势知识
+- **investment-framework**: 投资决策框架工具

@@ -1,0 +1,28 @@
+filters:
+  and:
+    - file.hasTag("投资教训")
+    - file.ext == "md"
+formulas:
+  error_icon: if(actual_change.contains("-"), "❌", "✅")
+properties:
+  asset:
+    displayName: 资产
+  lesson_date:
+    displayName: 日期
+  judgment_direction:
+    displayName: 判断方向
+  actual_change:
+    displayName: 实际变动
+views:
+  - type: table
+    name: 按资产查看
+    groupBy:
+      property: asset
+      direction: ASC
+    order:
+      - formula.error_icon
+      - asset
+      - lesson_date
+      - judgment_direction
+      - actual_change
+    sort: []

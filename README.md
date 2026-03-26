@@ -1,143 +1,181 @@
-# Investment Memory - 投资分析记忆管理Skills
+# Investment Memory - 投资分析记忆管理
 
-用于管理投资分析的操作历史、危机知识、学习教训和投资规律。
+基于 **Obsidian** 的投资分析记忆管理系统，让 Agent 和人类都能高效地阅读、查询和管理投资知识。
 
-## 功能特性
+## 核心特性
 
-### 核心功能
-- **操作历史记录**：记录每次API调用和分析操作
-- **分析结论管理**：保存和查询投资分析结论
-- **投资组合管理**：维护持仓信息
+- **人类友好**：Markdown 格式，可直接在 Obsidian 中阅读和编辑
+- **Agent 优化**：使用 frontmatter 属性快速过滤，可折叠 callouts 节省 tokens
+- **智能关联**：Tags 分类 + Wikilinks 关联，构建知识网络
+- **可视化过滤**：Bases 视图提供数据库式查询
 
-### 智能知识管理
-- **危机知识库**：结构化管理2000年以来的危机事件知识
-- **学习教训记录**：记录智能体的错误判断和教训
-- **投资规律提取**：从危机事件中提取投资规律
-- **智能知识检索**：根据当前形势加载相关历史知识
-
-### 产业趋势知识管理
-- **趋势生命周期分析**：判断产业所处阶段（萌芽期、成长期、成熟期、衰退期）
-- **趋势健康度评估**：评估趋势的投资价值和风险等级
-- **投资时机判断**：基于生命周期阶段给出投资时机建议
-- **趋势查询**：根据当前市场热点查询相关产业趋势
-
-### 投资决策框架
-- **估值检查**：检查资产估值是否合理（PE/PB历史分位数、PEG等）
-- **仓位计算**：根据风险等级和凯利公式计算建议仓位
-- **风险评估**：评估投资机会的综合风险（市场、公司、流动性、政策、技术）
-
-## 项目结构
+## 知识库结构
 
 ```
-investment-memory/
-├── README.md                          # 本文件
-├── .gitignore                         # Git忽略配置
-└── skills/
-    ├── memory/                        # 记忆管理skill
-    │   ├── SKILL.md                  # Skill文档
-    │   ├── scripts/                  # 功能脚本
-    │   │   ├── config.py             # 统一配置文件
-    │   │   ├── record_operation.py   # 记录操作
-    │   │   ├── get_history.py        # 查询历史
-    │   │   ├── save_conclusion.py    # 保存结论
-    │   │   ├── get_conclusion.py     # 查询结论
-    │   │   ├── update_portfolio.py   # 更新投资组合
-    │   │   ├── summarize.py          # 生成总结
-    │   │   ├── record_lesson.py      # 记录教训
-    │   │   ├── get_relevant_knowledge.py   # 查询相关知识
-    │   │   ├── extract_patterns.py   # 提取投资规律
-    │   │   └── manage_links.py       # 管理关联关系
-    │   ├── assets/                   # 示例数据
-    │   └── evals/                    # 评估用例
-    ├── crisis-knowledge-maintainer/  # 危机知识维护skill
-    │   ├── SKILL.md
-    │   ├── scripts/
-    │   └── evals/
-    ├── trend-knowledge/              # 产业趋势知识管理skill
-    │   ├── SKILL.md
-    │   ├── scripts/
-    │   └── evals/
-    └── investment-framework/         # 投资决策框架skill
-        ├── SKILL.md
-        ├── scripts/
-        └── evals/
+vault/
+├── 危机事件/              # 14个历史危机事件 (2000-2026)
+│   ├── _index.md         # 索引摘要
+│   └── *.md              # 事件详情
+├── 产业趋势/              # 6个产业趋势
+│   ├── _index.md         # 索引摘要
+│   └── *.md              # 趋势详情
+├── 投资教训/              # 投资错误教训
+│   ├── _index.md         # 索引摘要
+│   └── *.md              # 教训详情
+├── 投资框架/              # 投资决策工具
+│   ├── _index.md         # 框架概述
+│   ├── 估值检查.md       # PE/PB/PEG 估值方法
+│   ├── 仓位管理.md       # 凯利公式与仓位原则
+│   └── 风险评估.md       # 风险评估矩阵
+├── _index.md             # 主索引
+├── crisis-events.base    # 危机事件过滤视图
+├── industry-trends.base  # 趋势过滤视图
+└── investment-lessons.base # 教训过滤视图
 ```
+
+## 前置要求
+
+### 1. 安装 Obsidian 以及 Obsidian skills
+
+Obsidian 官方网站 https://obsidian.md
+
+Obsidian skills https://github.com/kepano/obsidian-skills
+
+### 2. 使用 UV 安装 Python 环境
+
+使用 UV 进行 Python 环境管理，UV 官方网站 https://docs.astral.sh/uv
 
 ## 快速开始
 
-### 环境准备
+### 1. 在 Obsidian 中打开
 
-将以下内容发送给你的智能体（openclaw、claude code、opencode等）。
+直接用 Obsidian 打开 `vault/` 目录即可开始阅读。
 
-```
-1. python环境配置
-检查当前是否存在python环境。如果有，那么请记住相关py代码通过该环境执行；如果没有，请先安装 https://docs.astral.sh/uv
-Ps: uv是一个高效的python环境管理工具。
+### 2. Agent 查询知识
 
-2. 下载skills并安装
-下载 https://github.com/HarryReporter/investment-memory/skills ，并安装在你对应的skills目录下。
+使用 obsidian-cli 查询：
 
-3. 复制示例数据到工作目录，项目记录的危机事件从2000-2026年。
-cp -r skills/memory/assets/memory .memory
-```
+```bash
+# 查询危机事件
+obsidian read file="危机事件/CRISIS_2026_USIRAN"
 
-## Agent Prompt
+# 快速获取元数据（省 tokens）
+obsidian property:get file="危机事件/CRISIS_2026_USIRAN"
 
-将以下prompt添加到你的智能体配置中（支持openclaw、claude code、opencode等）：
+# 按属性搜索
+obsidian search query="severity:critical tag:#危机事件"
 
-```markdown
-## 投资分析工作流程
-
-在进行投资分析时，必须遵循以下工作流程：
-
-### 1. 知识检索阶段
-在分析市场形势时，必须先查询相关历史知识：
-- 读取危机知识索引（.memory/crisis_knowledge/index.json）
-- 读取教训索引（.memory/lessons_learned/index.json）
-- 读取产业趋势索引（.memory/industry_trends/index.json）
-- 判断哪些历史知识与当前形势最相关
-- 加载相关知识详情
-
-### 2. 分析阶段
-- 基于历史知识和教训生成分析
-- 使用投资决策框架进行估值检查
-- 进行风险评估和仓位计算
-
-### 3. 记录阶段
-- 记录本次分析操作
-- 保存分析结论
-- 发现判断错误时，必须记录教训
+# 使用 Bases 视图
+obsidian read file="crisis-events.base"
 ```
 
-## 数据存储
+### 3. 更新知识
 
-所有记忆数据存储在 `.memory/` 目录：
+直接编辑 markdown 文件，或使用 obsidian-cli：
 
-```
-.memory/
-├── crisis_knowledge/        # 危机知识
-│   ├── index.json          # 索引（元数据+摘要）
-│   └── events/             # 详情文件
-├── lessons_learned/         # 学习教训
-│   ├── index.json          # 索引
-│   └── lessons/            # 详情文件
-├── industry_trends/         # 产业趋势
-│   ├── index.json          # 索引
-│   └── trends/             # 详情文件
-├── investment_patterns.json # 投资规律
-├── links.json              # 关联关系
-├── operations.json         # 操作记录
-├── conclusions.json        # 分析结论
-└── portfolio.json          # 持仓信息
+```bash
+# 更新属性
+obsidian property:set file="危机事件/CRISIS_2026_USIRAN" name="status" value="ongoing"
 ```
 
-## 相关Skill
+## Skills 说明
 
-- **memory**: 记忆管理skill，记录和查询投资分析操作历史、危机知识、产业趋势和学习教训
-- **crisis-knowledge-maintainer**: 危机知识维护skill，更新和维护危机事件知识库
-- **trend-knowledge**: 产业趋势知识管理skill，分析行业趋势生命周期和投资时机
-- **investment-framework**: 投资决策框架skill，提供估值检查、仓位计算和风险评估工具
+| Skill | 功能 | 触发词 |
+|-------|------|--------|
+| **memory** | 知识查询主入口 | "查询危机"、"查询趋势"、"投资记忆" |
+| **crisis-knowledge-maintainer** | 更新危机事件 | "更新危机"、"添加危机事件" |
+| **trend-knowledge** | 管理产业趋势 | "行业趋势"、"生命周期"、"添加趋势" |
+| **investment-framework** | 投资决策工具 | "估值"、"仓位"、"风险评估" |
 
-### 问题反馈
+### memory - 投资分析记忆管理
 
-如果你发现任何问题或有改进建议，请在 [GitHub Issues](https://github.com/HarryReporter/investment-memory/issues) 中提出。
+投资知识查询的主要入口，支持智能检索危机事件、产业趋势、投资教训和投资框架。
+
+**核心功能：**
+- 查询危机知识：按严重程度、时间范围筛选历史危机事件
+- 查询产业趋势：按生命周期阶段（萌芽/成长/成熟/衰退）筛选趋势
+- 查询投资教训：按资产类型筛选历史投资错误
+- 查询投资框架：获取估值、仓位、风险评估方法
+- Token优化：先读properties，使用Bases视图，按需加载详情
+
+### crisis-knowledge-maintainer - 危机知识维护
+
+更新和维护危机事件知识库，支持新增、修改和索引同步。
+
+**核心功能：**
+- 识别危机事件：通过事件ID或关键词搜索定位
+- 读取当前信息：获取事件详情、市场影响、投资机会
+- 分部更新：支持更新事件详情、市场影响（A股/港股/美股）、投资机会（短/中/长期）
+- 添加新危机：创建新危机事件文件并同步更新索引
+- 格式维护：保持frontmatter、callouts、wikilinks格式一致
+
+### trend-knowledge - 产业趋势知识管理
+
+管理产业趋势知识库，支持趋势查询、生命周期判断和投资时机分析。
+
+**核心功能：**
+- 生命周期判断：基于渗透率、增速等指标判断趋势阶段
+- 投资策略建议：根据阶段提供不同投资策略（萌芽期试探、成长期重仓、成熟期择时）
+- 趋势健康度分析：分析触发事件、关键词、市场影响
+- 添加新趋势：创建新趋势文件并同步更新索引
+- 历史教训学习：关注类似趋势的历史教训（如元宇宙泡沫）
+
+### investment-framework - 投资决策框架
+
+提供结构化的投资决策工具，包含5个核心模块：
+
+**核心模块：**
+1. **估值检查** (`check_valuation.py`)：PE历史分位数、CAPE比率、PEG估值、安全边际计算
+2. **仓位管理** (`position_sizing.py`)：凯利公式、波动率目标仓位、反马丁格尔缩减、金字塔加仓
+3. **风险评估** (`risk_assessment.py`)：六维度评估（市场/公司/流动性/政策/波动率）
+4. **止损止盈** (`stop_loss.py`)：ATR止损、分批止盈、移动止损、支撑位止损
+5. **市场状态检测** (`market_regime.py`)：趋势判断、波动率环境、仓位调整倍数
+
+**理论基础：** 基于Shiller CAPE、Peter Lynch PEG、John Kelly凯利公式等学术研究
+
+## Obsidian 格式特性
+
+- **Frontmatter**：结构化元数据（event_id, severity, date 等）
+- **Tags**：分类标签（#危机事件 #军事冲突 #原油）
+- **Wikilinks**：关联链接（`[[CRISIS_2026_USIRAN]]`）
+- **Callouts**：可折叠详情（`> [!details]- 内容`）
+- **Bases**：数据库式过滤视图
+
+## Token 优化策略
+
+1. **先读 properties**：只获取元数据，不加载正文
+2. **使用 Bases 视图**：一次读取获取全局概览
+3. **可折叠 callouts**：详情按需展开
+4. **分层加载**：先读摘要，需要时再读详情
+
+## 知识覆盖
+
+| 类别 | 数量 | 时间范围 |
+|------|------|----------|
+| 危机事件 | 14个 | 2000-2026 |
+| 产业趋势 | 6个 | 2019-2025 |
+| 投资教训 | 3个 | 2026 |
+| 投资框架 | 4个 | - |
+
+### 危机事件一览
+
+- 美伊军事冲突 (2026)
+- 俄乌战争 (2022)
+- 新冠疫情 (2020)
+- 2008次贷危机
+- 互联网泡沫 (2000)
+- ...
+
+### 产业趋势一览
+
+- AI/大模型革命 (2023-成长期)
+- 新能源汽车 (2019-成熟期)
+- 自动驾驶/机器人 (2024-萌芽期)
+- 量子计算 (2025-萌芽期)
+- ...
+
+---
+
+**最后更新：2026-03-26**：已从 Python+JSON 格式升级为 Obsidian Markdown 格式，人类可直接阅读，Agent 查询更省 tokens。
+
+- **注意事项**：本项目基本由 AI 生成，如果有优化建议或者问题需反馈，可以在issue中提交。

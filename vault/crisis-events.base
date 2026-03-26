@@ -1,0 +1,35 @@
+filters:
+  and:
+    - file.hasTag("危机事件")
+    - file.ext == "md"
+formulas:
+  severity_icon: if(severity == "critical", "🔴", if(severity == "high", "🟠", "🟡"))
+properties:
+  event_name:
+    displayName: 事件名称
+  event_type:
+    displayName: 类型
+  severity:
+    displayName: 严重程度
+  date:
+    displayName: 时间
+views:
+  - type: table
+    name: 按严重程度排序
+    order:
+      - formula.severity_icon
+      - event_name
+      - event_type
+      - severity
+      - date
+    summaries:
+      severity: Unique
+  - type: table
+    name: 按类型分组
+    groupBy:
+      property: event_type
+      direction: ASC
+    order:
+      - event_name
+      - severity
+      - date

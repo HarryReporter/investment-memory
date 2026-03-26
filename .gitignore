@@ -10,6 +10,7 @@ venv/
 *.egg-info/
 dist/
 build/
+.ruff_cache/
 
 # IDE
 .vscode/
@@ -22,8 +23,9 @@ build/
 .DS_Store
 Thumbs.db
 
-# Memory data (runtime data, not for version control)
-.memory/
+# Obsidian
+vault/.obsidian/
+vault/.trash/
 
 # Temporary files
 *.tmp
@@ -37,5 +39,12 @@ Thumbs.db
 .coverage
 htmlcov/
 
-# agent framwork
-.opencode
+# Agent framework
+.opencode/
+.agents/
+.claude/
+skills-lock.json
+
+
+# Planning (optional - uncomment if you don't want to track planning docs)
+.planning/

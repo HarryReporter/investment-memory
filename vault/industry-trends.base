@@ -1,0 +1,26 @@
+filters:
+  and:
+    - file.hasTag("产业趋势")
+    - file.ext == "md"
+formulas:
+  phase_icon: if(current_phase == "growth", "📈", if(current_phase == "decline", "📉", if(current_phase == "mature", "➡️", "🌱")))
+properties:
+  trend_name:
+    displayName: 趋势名称
+  start_year:
+    displayName: 起始年
+  current_phase:
+    displayName: 当前阶段
+  trigger_event:
+    displayName: 触发事件
+views:
+  - type: table
+    name: 按生命周期阶段
+    order:
+      - formula.phase_icon
+      - trend_name
+      - start_year
+      - current_phase
+      - trigger_event
+    summaries:
+      current_phase: Unique
